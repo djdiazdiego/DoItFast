@@ -93,7 +93,6 @@ namespace DoItFast.Application.Services
 
                     var mailRequest = new MailRequest
                     {
-                        FromEmail = null,
                         ToEmail = new List<string> { user.Email },
                         Body = $"Please confirm your account by visiting this URL {verificationUri}",
                         Subject = "Confirm Registration"
