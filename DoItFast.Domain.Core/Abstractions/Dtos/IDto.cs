@@ -6,18 +6,18 @@ namespace DoItFast.Domain.Core.Abstractions.Dtos
     {
     }
 
-    public interface ISearchDto<TResponse> : IDto
+    public interface IFilterResponseDto<TResponse> : IDto
        where TResponse : class, IDto
     {
 
         /// <summary>
         /// Total of records.
         /// </summary>
-        public int Total { get; }
+        int Total { get; }
 
         /// <summary>
         /// Entities list.
         /// </summary>
-        public List<TResponse> Entities { get; }
+        List<TResponse> Entities { get; }
     }
 }

@@ -1,8 +1,5 @@
 ﻿using DoItFast.Domain.Core.Abstractions.Entities.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 
 namespace DoItFast.Domain.Core.Abstractions.Entities
 {
@@ -13,6 +10,8 @@ namespace DoItFast.Domain.Core.Abstractions.Entities
     public abstract class Enumeration<TKey, TUserKey> : Entity<TKey, TUserKey>, IEnumeration, INotRepository
         where TKey : Enum
     {
+        private string _name;
+
         /// <summary>
         /// 
         /// </summary>
@@ -22,10 +21,16 @@ namespace DoItFast.Domain.Core.Abstractions.Entities
         /// </summary>
         /// <param name="id"></param>
         /// <param name="name"></param>
-        protected Enumeration(TKey id, string name) => (Id, Name) = (id, name);
+        protected Enumeration(TKey id, string name) : base(id)
+        {
+            _name = name;
+        }
 
         /// <inheritdoc />
-        public string Name { get; set; }
+        public string Name => _name;
+
+        /// <inheritdoc />
+        public void SetName(string name) => _name = name;
 
         /// <inheritdoc />
         public override bool Equals(object obj) =>

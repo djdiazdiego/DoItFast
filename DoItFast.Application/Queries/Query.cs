@@ -21,7 +21,7 @@ namespace DoItFast.Application.Queries
     /// </summary>
     /// <typeparam name="TResponse"></typeparam>
     /// <typeparam name="TKey"></typeparam>
-    public abstract class Query<TResponse, TKey> : IQuery<Response<TResponse>>
+    public abstract class Query<TKey, TResponse> : IQuery<Response<TResponse>>
         where TResponse : class, IDto
     {
         protected Query(TKey id)
@@ -50,10 +50,10 @@ namespace DoItFast.Application.Queries
     /// Query with entity filter.
     /// </summary>
     /// <typeparam name="TFilter"></typeparam>
-    /// <typeparam name="TResponse"></typeparam>
-    public abstract class SearchFilterQuery<TResponse, TDto, TModel> : SearchFilter, IQuery<Response<TResponse>>
-        where TResponse : class, ISearchDto<TDto>
-        where TDto : class, IDto
+    /// <typeparam name="TFilterResponse"></typeparam>
+    public abstract class FilterQuery<TFilterResponse, TResponseDto, TModel> : Filter, IQuery<Response<TFilterResponse>>
+        where TFilterResponse : class, IFilterResponseDto<TResponseDto>
+        where TResponseDto : class, IDto
         where TModel : class, IEntity
     {
         /// <summary>

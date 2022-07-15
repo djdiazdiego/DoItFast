@@ -11,38 +11,37 @@ namespace DoItFast.Domain.Core.Abstractions.Entities
     public abstract class Entity<TKey, TUserKey> : IEntity
     {
         private int? _requestedHashCode;
+        private DateTimeOffset _created;
+        private DateTimeOffset _lastModified;
+
+        protected Entity()
+        {
+        }
+
+        protected Entity(TKey id)
+        {
+            Id = id;
+        }
 
         /// <summary>
         /// Entity identifier.
         /// </summary>
-        public TKey Id { get; set; }
+        public TKey Id { get; }
 
         /// <inheritdoc />
         object IEntity.Id => this.Id;
 
-        /// <summary>
-        /// User identifier.
-        /// </summary>
-        public TUserKey UserId { get; set; }
+        /// <inheritdoc />
+        public DateTimeOffset Created => _created;
 
         /// <inheritdoc />
-        object? IEntity.UserId
-        {
-            get
-            {
-                if ((typeof(TUserKey) == typeof(long) || typeof(TUserKey) == typeof(int) || typeof(TUserKey) == typeof(Guid)) && 
-                    this.UserId.Equals(default(TUserKey)))
-                    return null;
-
-                return this.UserId;
-            }
-        }
+        public DateTimeOffset? LastModified => _lastModified;
 
         /// <inheritdoc />
-        public DateTime Created { get; set; }
+        public void SetCreatedDate(DateTimeOffset date) => _created = date;
 
         /// <inheritdoc />
-        public DateTime? LastModified { get; set; }
+        public void SetLastModified(DateTimeOffset date) => _lastModified = date;
 
         /// <inheritdoc />
         public object Clone() => this.DeepClone();
@@ -50,8 +49,7 @@ namespace DoItFast.Domain.Core.Abstractions.Entities
         /// <inheritdoc />
         public bool IsTransient() =>
             (typeof(TKey) == typeof(long) || typeof(TKey) == typeof(int) ||
-                typeof(TKey) == typeof(Guid)) &&
-            this.Id.Equals(default(TKey));
+                typeof(TKey) == typeof(Guid)) && this.Id.Equals(default(TKey));
 
         /// <inheritdoc />
         public override bool Equals(object obj) =>

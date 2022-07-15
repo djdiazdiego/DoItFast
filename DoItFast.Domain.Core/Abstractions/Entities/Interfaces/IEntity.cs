@@ -13,24 +13,31 @@ namespace DoItFast.Domain.Core.Abstractions.Entities.Interfaces
         object Id { get; }
 
         /// <summary>
-        /// User identifier.
-        /// </summary>
-        object? UserId { get; }
-
-        /// <summary>
         /// Creation date.
         /// </summary>
-        DateTime Created { get; }
+        DateTimeOffset Created { get; }
 
         /// <summary>
         /// Modification date.
         /// </summary>
-        DateTime? LastModified { get; }
+        DateTimeOffset? LastModified { get; }
 
         /// <summary>
         /// Indicate is not initialized yet.
         /// </summary>
         /// <returns></returns>
         bool IsTransient();
+
+        /// <summary>
+        /// Set creation date
+        /// </summary>
+        /// <param name="date"></param>
+        void SetCreatedDate(DateTimeOffset date);
+
+        /// <summary>
+        /// Set modification date
+        /// </summary>
+        /// <param name="date"></param>
+        void SetLastModified(DateTimeOffset date);
     }
 }

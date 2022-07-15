@@ -11,21 +11,20 @@ namespace DoItFast.Domain.Core.Abstractions.Entities
     {
         private readonly List<INotification> _domainEvents;
 
-        /// <summary>
-        /// 
-        /// </summary>
-        protected AggregateRoot() => this._domainEvents = new List<INotification>();
+        protected AggregateRoot() => _domainEvents = new List<INotification>();
+        protected AggregateRoot(TKey id) : base(id) => _domainEvents = new List<INotification>();
+        
 
         /// <inheritdoc />
-        public void AddDomainEvent(INotification @event) => this._domainEvents.Add(@event);
+        public void AddDomainEvent(INotification @event) => _domainEvents.Add(@event);
 
         /// <inheritdoc />
-        public void RemoveDomainEvent(INotification @event) => this._domainEvents.Remove(@event);
+        public void RemoveDomainEvent(INotification @event) => _domainEvents.Remove(@event);
 
         /// <inheritdoc />
-        public void ClearDomainEvents() => this._domainEvents.Clear();
+        public void ClearDomainEvents() => _domainEvents.Clear();
 
         /// <inheritdoc />
-        public IReadOnlyCollection<INotification> GetDomainEvents() => this._domainEvents;
+        public IReadOnlyCollection<INotification> GetDomainEvents() => _domainEvents;
     }
 }

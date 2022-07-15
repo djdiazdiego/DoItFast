@@ -1,34 +1,26 @@
 ﻿using AutoMapper;
 using DoItFast.Application.Command;
-using DoItFast.Application.Dtos;
 using DoItFast.Application.Exceptions;
+using DoItFast.Application.Extensions;
 using DoItFast.Application.Queries;
 using DoItFast.Application.Wrappers;
-using DoItFast.Domain.Core.Abstractions.Commands;
 using DoItFast.Domain.Core.Abstractions.Dtos;
-using DoItFast.Domain.Core.Abstractions.Queries;
 using DoItFast.Domain.Core.Abstractions.Wrappers;
-using DoItFast.Infrastructure.Shared.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DoItFast.WebApi.Controllers
 {
     /// <summary>
-    /// Controller common operations.
+    /// Controller common operations
     /// </summary>
     [ApiController]
     [Produces("application/json")]
     [Route("api/[controller]")]
     public abstract class ApiControllerBase : Controller
     {
-        protected readonly IMediator _mediator;
-        protected readonly IMapper _mapper;
-
-        protected ApiControllerBase(IMediator mediator, IMapper mapper)
+        protected ApiControllerBase()
         {
-            _mediator = mediator;
-            _mapper = mapper;
         }
 
         /// <summary>
@@ -60,16 +52,20 @@ namespace DoItFast.WebApi.Controllers
         }
     }
 
+
     /// <summary>
-    /// Read operations.
+    /// Read operations
     /// </summary>
     /// <typeparam name="TKey"></typeparam>
     /// <typeparam name="TResponse"></typeparam>
-    public abstract class ApiControllerBase<TKey, TResponse> : ApiControllerBase
+    public abstract class ApiReadControllerBase<TKey, TResponse> : ApiControllerBase
         where TResponse : class, IDto
     {
-        protected ApiControllerBase(IMediator mediator, IMapper mapper) : base(mediator, mapper)
+        protected readonly IMediator _mediator;
+
+        protected ApiReadControllerBase(IMediator mediator)
         {
+            _mediator = mediator;
         }
 
         /// <summary>
@@ -79,14 +75,9 @@ namespace DoItFast.WebApi.Controllers
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpGet("{id}")]
-        [ProducesResponseType(typeof(ValidationResponse), StatusCodes.Status422UnprocessableEntity)]
         public virtual async Task<ActionResult<Response<TResponse>>> Get(TKey id, CancellationToken cancellationToken)
         {
-            var type = typeof(Query<TResponse, TKey>).GetConcreteTypeFilterSpecificInterface();
-
-            var query = Activator.CreateInstance(type, new object[] { id });
-            var result = await _mediator.Send(query, cancellationToken);
-            return Ok(result);
+            return await this.BuildGetDeleteAsync<TKey, TResponse>(id, _mediator, typeof(Query<TKey, TResponse>), cancellationToken);
         }
 
         /// <summary>
@@ -94,32 +85,153 @@ namespace DoItFast.WebApi.Controllers
         /// </summary>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        [HttpGet()]
-        public virtual async Task<ActionResult<Response<TResponse[]>>> Get(CancellationToken cancellationToken)
+        [HttpGet(), Route("all")]
+        public virtual async Task<ActionResult<Response<TResponse[]>>> GetAll(CancellationToken cancellationToken)
         {
-            var type = typeof(TResponse) != typeof(EnumerationDto) ?
-                typeof(Query<TResponse[]>).GetConcreteTypeFilterSpecificInterface() :
-                typeof(EnumerationQuery<TKey, TResponse[]>).GetConcreteTypeFilterSpecificInterface();
+            return await this.BuildGetAllAsync<TKey, TResponse>(_mediator, cancellationToken);
+        }
+    }
 
-            var query = Activator.CreateInstance(type);
-            var result = await _mediator.Send(query, cancellationToken);
-            return Ok(result);
+
+    /// <summary>
+    /// Filter operations
+    /// </summary>
+    /// <typeparam name="TRequest"></typeparam>
+    /// <typeparam name="TResponse"></typeparam>
+    /// <typeparam name="TFilterResponse"></typeparam>
+    public abstract class ApiFilterControllerBase<TRequest, TResponse, TFilterResponse> : ApiControllerBase
+        where TRequest : class, IFilter, IDto
+        where TResponse : class, IDto
+        where TFilterResponse : class, IFilterResponseDto<TResponse>, IDto
+    {
+        protected readonly IMediator _mediator;
+        protected readonly IMapper _mapper;
+
+        protected ApiFilterControllerBase(IMediator mediator, IMapper mapper)
+        {
+            _mediator = mediator;
+            _mapper = mapper;
+        }
+
+        /// <summary>
+        /// Filter entities.
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [HttpGet(), Route("page")]
+        public virtual async Task<ActionResult<Response<TFilterResponse>>> Page([FromQuery] TRequest filter, CancellationToken cancellationToken)
+        {
+            return await this.BuildFilterAsync<TRequest, TResponse, TFilterResponse>(filter, _mapper, _mediator, cancellationToken);
         }
     }
 
     /// <summary>
-    /// Read operations, filter operations.
+    /// Full read operations
     /// </summary>
+    /// <typeparam name="TKey"></typeparam>
     /// <typeparam name="TFilterRequest"></typeparam>
-    /// <typeparam name="TRequest"></typeparam>
     /// <typeparam name="TResponse"></typeparam>
-    /// <typeparam name="TResponseDto"></typeparam>
-    /// <typeparam name="TFilterQuery"></typeparam>
-    public abstract class ApiSearchFilterControllerBase<TRequest, TResponse> : ApiControllerBase
-        where TRequest : class, ISearchFilter, IDto
+    /// <typeparam name="TFilterResponse"></typeparam>
+    public abstract class ApiFullReadControllerBase<TKey, TFilterRequest, TResponse, TFilterResponse> : ApiReadControllerBase<TKey, TResponse>
+        where TFilterRequest : class, IFilter, IDto
         where TResponse : class, IDto
+        where TFilterResponse : class, IFilterResponseDto<TResponse>, IDto
     {
-        protected ApiSearchFilterControllerBase(IMediator mediator, IMapper mapper) : base(mediator, mapper)
+        protected readonly IMapper _mapper;
+
+        protected ApiFullReadControllerBase(IMediator mediator, IMapper mapper) : base(mediator)
+        {
+            _mapper = mapper;
+        }
+
+        /// <summary>
+        /// Filter entities.
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [HttpGet(), Route("page")]
+        public virtual async Task<ActionResult<Response<TFilterResponse>>> Page([FromQuery] TFilterRequest filter, CancellationToken cancellationToken)
+        {
+            return await this.BuildFilterAsync<TFilterRequest, TResponse, TFilterResponse>(filter, _mapper, _mediator, cancellationToken);
+        }
+    }
+
+    /// <summary>
+    /// Read-Write operations
+    /// </summary>
+    /// <typeparam name="TKey"></typeparam>
+    /// <typeparam name="TResponse"></typeparam>
+    /// <typeparam name="TCreateRequest"></typeparam>
+    /// <typeparam name="TUpdateRequest"></typeparam>
+    public abstract class ApiReadWriteControllerBase<TKey, TResponse, TCreateRequest, TUpdateRequest> : ApiReadControllerBase<TKey, TResponse>
+        where TResponse : class, IDto
+        where TCreateRequest : class, IDto
+        where TUpdateRequest : class, IDto
+    {
+        protected readonly IMapper _mapper;
+
+        protected ApiReadWriteControllerBase(IMediator mediator, IMapper mapper) : base(mediator)
+        {
+            _mapper = mapper;
+        }
+
+        /// <summary>
+        /// Create entity
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [HttpPost()]
+        public virtual async Task<ActionResult<Response<TResponse>>> Post([FromBody] TCreateRequest dto, CancellationToken cancellationToken)
+        {
+            return await this.BuildPostPutAsync<TCreateRequest, TResponse>(dto, _mapper, _mediator, typeof(Command<TResponse>), cancellationToken);
+        }
+
+        /// <summary>
+        /// Update entity
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [HttpPut()]
+        public virtual async Task<ActionResult<Response<TResponse>>> Put([FromBody] TUpdateRequest dto, CancellationToken cancellationToken)
+        {
+            return await this.BuildPostPutAsync<TUpdateRequest, TResponse>(dto, _mapper, _mediator, typeof(UpdateCommand<TKey, TResponse>), cancellationToken);
+        }
+
+        /// <summary>
+        /// Delete entity
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [HttpDelete()]
+        public virtual async Task<ActionResult<Response<TResponse>>> Delete([FromBody] TKey id, CancellationToken cancellationToken)
+        {
+            return await this.BuildGetDeleteAsync<TKey, TResponse>(id, _mediator, typeof(Command<TKey, TResponse>), cancellationToken);
+        }
+    }
+
+
+    /// <summary>
+    /// Full operations
+    /// </summary>
+    /// <typeparam name="TKey"></typeparam>
+    /// <typeparam name="TCreateRequest"></typeparam>
+    /// <typeparam name="TUpdateRequest"></typeparam>
+    /// <typeparam name="TFilterRequest"></typeparam>
+    /// <typeparam name="TResponse"></typeparam>
+    /// <typeparam name="TFilterResponse"></typeparam>
+    public abstract class ApiFullControllerBase<TKey, TCreateRequest, TUpdateRequest, TFilterRequest, TResponse, TFilterResponse> : ApiReadWriteControllerBase<TKey, TResponse, TCreateRequest, TUpdateRequest>
+        where TCreateRequest : class, IDto
+        where TUpdateRequest : class, IDto
+        where TFilterRequest : class, IFilter, IDto
+        where TResponse : class, IDto
+        where TFilterResponse : class, IFilterResponseDto<TResponse>, IDto
+    {
+        protected ApiFullControllerBase(IMediator mediator, IMapper mapper) : base(mediator, mapper)
         {
         }
 
@@ -129,81 +241,10 @@ namespace DoItFast.WebApi.Controllers
         /// <param name="filter"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        [HttpGet()]
-        public virtual async Task<ActionResult<Response<TResponse>>> Get([FromQuery] TRequest filter, CancellationToken cancellationToken)
+        [HttpGet(), Route("page")]
+        public virtual async Task<ActionResult<Response<TFilterResponse>>> Page([FromQuery] TFilterRequest filter, CancellationToken cancellationToken)
         {
-            var type = typeof(IQuery<Response<TResponse>>).GetConcreteTypeFilterSpecificInterface(assembly: typeof(Query<>).Assembly);
-            var query = Activator.CreateInstance(type);
-            _mapper.Map(filter, query);
-            var result = await _mediator.Send(query, cancellationToken);
-            return Ok(result);
+            return await this.BuildFilterAsync<TFilterRequest, TResponse, TFilterResponse>(filter, _mapper, _mediator, cancellationToken);
         }
     }
-
-
-    /// <summary>
-    /// Read-Write operations.
-    /// </summary>
-    /// <typeparam name="TKey"></typeparam>
-    /// <typeparam name="TResponse"></typeparam>
-    /// <typeparam name="TCreateRequest"></typeparam>
-    /// <typeparam name="TUpdateRequest"></typeparam>
-    [ProducesResponseType(typeof(ValidationResponse), StatusCodes.Status422UnprocessableEntity)]
-    public abstract class ApiControllerBase<TKey, TResponse, TCreateRequest, TUpdateRequest> : ApiControllerBase<TKey, TResponse>
-            where TResponse : class, IDto
-            where TCreateRequest : class, IDto
-            where TUpdateRequest : class, IDto
-    {
-        protected ApiControllerBase(IMediator mediator, IMapper mapper) : base(mediator, mapper)
-        {
-        }
-
-        /// <summary>
-        /// Create entity.
-        /// </summary>
-        /// <param name="dto"></param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        [HttpPost()]
-        public virtual async Task<ActionResult<Response<TResponse>>> Post([FromBody] TCreateRequest dto, CancellationToken cancellationToken)
-        {
-            var type = typeof(Command<TResponse>).GetConcreteTypeFilterSpecificInterface();
-            var command = Activator.CreateInstance(type);
-            _mapper.Map(dto, command);
-            var result = await _mediator.Send(command, cancellationToken);
-            return Ok(result);
-        }
-
-        /// <summary>
-        /// Update entity.
-        /// </summary>
-        /// <param name="dto"></param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        [HttpPut()]
-        public virtual async Task<ActionResult<Response<TResponse>>> Put([FromBody] TUpdateRequest dto, CancellationToken cancellationToken)
-        {
-            var type = typeof(UpdateCommand<TKey, TResponse>).GetConcreteTypeFilterSpecificInterface();
-            var command = Activator.CreateInstance(type);
-            _mapper.Map(dto, command);
-            var result = await _mediator.Send(command, cancellationToken);
-            return Ok(result);
-        }
-
-        /// <summary>
-        /// Delete entity.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        [HttpDelete()]
-        public virtual async Task<ActionResult<Response<TResponse>>> Delete([FromBody] TKey id, CancellationToken cancellationToken)
-        {
-            var type = typeof(Command<TKey, TResponse>).GetConcreteTypeFilterSpecificInterface();
-            var command = Activator.CreateInstance(type, new object[] { id });
-            var result = await _mediator.Send(command, cancellationToken);
-            return Ok(result);
-        }
-    }
-
 }

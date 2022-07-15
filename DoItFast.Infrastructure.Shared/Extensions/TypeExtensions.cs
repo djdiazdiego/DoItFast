@@ -32,17 +32,14 @@ namespace DoItFast.Infrastructure.Shared.Extensions
         /// <param name="filter"></param>
         /// <param name="assembly"></param>
         /// <returns></returns>
-        public static Type GetConcreteTypeFilterSpecificInterface(this Type type, Expression<Func<Type, bool>> filter = null, Assembly? assembly = null)
+        public static Type GetConcreteTypeWithFilter(this Type type, Expression<Func<Type, bool>> filter = null, Assembly? assembly = null)
         {
             var assemblyTypes = assembly != null ? assembly.GetTypes() : type.Assembly.GetTypes();
-
-            var query = assemblyTypes
-                .Where(t => t.IsClass && !t.IsAbstract && !t.IsInterface && t.IsAssignableTo(type)).AsQueryable();
+            var query = assemblyTypes.Where(t => t.IsClass && !t.IsAbstract && !t.IsInterface && t.IsAssignableTo(type))
+                .AsQueryable();
 
             if (filter != null)
-            {
                 query = query.Where(filter);
-            }
 
             return query.First();
         }

@@ -4,7 +4,6 @@ using DoItFast.Domain.Core.Abstractions.Commands;
 using DoItFast.Domain.Core.Abstractions.Dtos;
 using DoItFast.Domain.Core.Abstractions.Entities.Interfaces;
 using DoItFast.Domain.Core.Abstractions.Persistence;
-using DoItFast.Infrastructure.Shared.Services.Interfaces;
 
 namespace DoItFast.Application.Command
 {

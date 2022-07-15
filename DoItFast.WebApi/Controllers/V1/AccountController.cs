@@ -1,8 +1,6 @@
-﻿using AutoMapper;
-using DoItFast.Application.Dtos.Account;
+﻿using DoItFast.Application.Dtos.Account;
 using DoItFast.Application.Services.Interfaces;
 using DoItFast.WebApi.Controllers;
-using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DoItFast.WebApi.V1.Controllers
@@ -14,10 +12,8 @@ namespace DoItFast.WebApi.V1.Controllers
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="mediator"></param>
         /// <param name="accountService"></param>
-        /// <param name="mapper"></param>
-        public AccountController(IMediator mediator, IAccountService accountService, IMapper mapper) : base(mediator, mapper)
+        public AccountController(IAccountService accountService)
         {
             _accountService = accountService;
         }

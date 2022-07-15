@@ -1,11 +1,10 @@
 ﻿using DoItFast.Domain.Core.Abstractions.Dtos;
 using DoItFast.Domain.Core.Attributes;
-using DoItFast.Domain.Models.PlanAggregate;
+using DoItFast.Domain.Models.GatewayAggregate;
 
 namespace DoItFast.Application.Dtos
 {
-    [FullMap(typeof(PlanType), ReverseMap = true)]
-    [FullMap(typeof(PriorityType), ReverseMap = true)]
+    [FullMap(typeof(PeripheralDeviceStatus), ReverseMap = true)]
     public class EnumerationDto: IDto
     {
         /// <summary>

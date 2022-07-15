@@ -1,14 +1,9 @@
 ﻿using DoItFast.Application.Behaviours;
-using DoItFast.Application.Dtos;
 using DoItFast.Application.Extensions;
-using DoItFast.Application.Queries;
 using DoItFast.Application.Services;
 using DoItFast.Application.Services.Interfaces;
 using DoItFast.Application.Wrappers;
 using DoItFast.Domain.Core.Abstractions.Persistence;
-using DoItFast.Domain.Core.Abstractions.Queries;
-using DoItFast.Domain.Core.Abstractions.Wrappers;
-using DoItFast.Domain.Models.PlanAggregate;
 using DoItFast.Domain.Settings;
 using DoItFast.Infrastructure.Identity.Settings;
 using DoItFast.Infrastructure.Persistence.Contexts;

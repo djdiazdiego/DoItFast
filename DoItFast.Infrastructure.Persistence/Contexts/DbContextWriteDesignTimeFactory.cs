@@ -32,7 +32,7 @@ namespace DoItFast.Infrastructure.Persistence.Contexts
                     errorNumbersToAdd: sqlServerSettings.ErrorNumbersToAdd);
             });
 
-            return new DbContextWrite(builder.Options, null, null, null);
+            return new DbContextWrite(builder.Options);
         }
     }
 }

@@ -27,16 +27,6 @@ namespace DoItFast.WebApi.Middlewares
             }
             catch (Exception exception)
             {
-                IBaseResponse responseModel = exception is ValidationException validationException ?
-                    new ValidationResponse(exception.Message, validationException) :
-                    new Response<string>()
-                    {
-                        Succeeded = false,
-                        Message = exception.Message,
-                        Errors = exception.GetAllMessages().ToList()
-                    };
-
-
                 var response = context.Response;
                 response.ContentType = "application/json";
                 response.StatusCode = exception switch
@@ -48,6 +38,16 @@ namespace DoItFast.WebApi.Middlewares
                     // unhandled error
                     _ => (int)HttpStatusCode.InternalServerError
                 };
+
+                IBaseResponse responseModel = exception is ValidationException validationException ?
+                    new ValidationResponse(response.StatusCode, exception.Message, validationException) :
+                    new Response<string>()
+                    {
+                        Code = response.StatusCode,
+                        Succeeded = false,
+                        Message = exception.Message,
+                        Errors = exception.GetAllMessages().ToList()
+                    };
 
                 var result = JsonConvert.SerializeObject(responseModel);
 

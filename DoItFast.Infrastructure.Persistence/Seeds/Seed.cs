@@ -34,7 +34,7 @@ namespace DoItFast.Infrastructure.Persistence.Seeds
                     {
                         if (dbEntity.Name != name)
                         {
-                            dbEntity.Name = name;
+                            dbEntity.SetName(name);
                             context.Update(dbEntity);
                         }
                     }

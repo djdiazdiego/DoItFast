@@ -10,6 +10,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DoItFast.Application.Queries
 {
+    /// <summary>
+    /// Get query handler
+    /// </summary>
+    /// <typeparam name="TModel"></typeparam>
+    /// <typeparam name="TResponse"></typeparam>
+    /// <typeparam name="TGetQuery"></typeparam>
     public abstract class GetQueryHandler<TModel, TResponse, TGetQuery> : IQueryHandler<TGetQuery, Response<TResponse>>
         where TModel : class, IEntity
         where TResponse : class, IDto
@@ -38,6 +44,12 @@ namespace DoItFast.Application.Queries
         }
     }
 
+    /// <summary>
+    /// Get all query handler
+    /// </summary>
+    /// <typeparam name="TModel"></typeparam>
+    /// <typeparam name="TResponse"></typeparam>
+    /// <typeparam name="TGetAllQuery"></typeparam>
     public abstract class GetAllQueryHandler<TModel, TResponse, TGetAllQuery> : IQueryHandler<TGetAllQuery, Response<TResponse[]>>
           where TModel : class, IEntity
           where TResponse : class, IDto
@@ -72,11 +84,18 @@ namespace DoItFast.Application.Queries
         }
     }
 
-    public abstract class SearchFilterQueryHandler<TModel, TResponse, TDto, TFilterQuery> : IQueryHandler<TFilterQuery, Response<TResponse>>
+    /// <summary>
+    /// Filter query handler
+    /// </summary>
+    /// <typeparam name="TModel"></typeparam>
+    /// <typeparam name="TFilterResponse"></typeparam>
+    /// <typeparam name="TResponseDto"></typeparam>
+    /// <typeparam name="TFilterQuery"></typeparam>
+    public abstract class FilterQueryHandler<TModel, TFilterResponse, TResponseDto, TFilterQuery> : IQueryHandler<TFilterQuery, Response<TFilterResponse>>
         where TModel : class, IEntity
-        where TResponse : class, ISearchDto<TDto>
-        where TDto : class, IDto
-        where TFilterQuery : SearchFilterQuery<TResponse, TDto, TModel>, ISearchFilter, IQuery<Response<TResponse>>
+        where TFilterResponse : class, IFilterResponseDto<TResponseDto>
+        where TResponseDto : class, IDto
+        where TFilterQuery : FilterQuery<TFilterResponse, TResponseDto, TModel>, IFilter, IQuery<Response<TFilterResponse>>
     {
         private readonly IQueryRepository<TModel> _repository;
         private readonly IMapper _mapper;
@@ -86,27 +105,26 @@ namespace DoItFast.Application.Queries
         /// </summary>
         /// <param name="repository"></param>
         /// <param name="mapper"></param>
-        public SearchFilterQueryHandler(IQueryRepository<TModel> repository, IMapper mapper)
+        public FilterQueryHandler(IQueryRepository<TModel> repository, IMapper mapper)
         {
             _repository = repository;
             _mapper = mapper;
         }
 
-        public async Task<Response<TResponse>> Handle(TFilterQuery request, CancellationToken cancellationToken)
+        public async Task<Response<TFilterResponse>> Handle(TFilterQuery request, CancellationToken cancellationToken)
         {
             var query = request.BuildFilter(_repository);
-            var total = await query.CountAsync();
+            var total = await query.CountAsync(cancellationToken);
 
-            ApplyIncludes(query, request.Include);
-            ApplyOrder(query, request.Order);
-            BuildPagging(query, request.Pagging);
+            query = ApplyOrder(query, request.Order);
+            query = BuildPagging(query, request.Pagging);
 
             var entities = await query.ToListAsync(cancellationToken);
-            var entitiesDto = _mapper.Map<List<TDto>>(entities);
+            var entitiesDto = _mapper.Map<List<TResponseDto>>(entities);
 
-            var response = Activator.CreateInstance(typeof(TResponse), new object[] { entitiesDto, total }) as TResponse;
+            var response = Activator.CreateInstance(typeof(TFilterResponse), new object[] { entitiesDto, total }) as TFilterResponse;
 
-            return new Response<TResponse>(response);
+            return new Response<TFilterResponse>(response);
         }
 
         /// <summary>
@@ -114,14 +132,14 @@ namespace DoItFast.Application.Queries
         /// </summary>
         /// <param name="query"></param>
         /// <param name="orders"></param>
-        private void ApplyOrder(IQueryable<IEntity> query, IOrder? orders)
+        private IQueryable<IEntity> ApplyOrder(IQueryable<IEntity> query, IOrder orders)
         {
-            if (orders != null && typeof(TModel).GetProperties().Any(p => p.Name == orders.SortBy))
-            {
-                query = orders.SortOperation == SortOperation.ASC ?
-                    query.OrderBy(o => orders.SortBy) :
-                    query.OrderByDescending(o => orders.SortBy);
-            }
+            var sortBy = typeof(TModel).GetProperties().Any(p => p.Name == orders.SortBy) ?
+                orders.SortBy : nameof(IEntity.Id);
+
+            return orders.SortOperation == SortOperation.ASC ?
+                query.OrderBy(o => sortBy) :
+                query.OrderByDescending(o => sortBy);
         }
 
         /// <summary>
@@ -129,34 +147,12 @@ namespace DoItFast.Application.Queries
         /// </summary>
         /// <param name="query"></param>
         /// <param name="pagging"></param>
-        private void BuildPagging(IQueryable<IEntity> query, IPagging? pagging)
+        private IQueryable<IEntity> BuildPagging(IQueryable<IEntity> query, IPagging pagging)
         {
-            var page = 1;
-            var pageSize = 10;
+            var page = pagging.Page < 1 ? 1 : pagging.Page;
+            var pageSize = pagging.PageSize < 10 ? 10 : pagging.PageSize;
 
-            if (pagging != null)
-            {
-                page = pagging.Page < 1 ? 1 : pagging.Page;
-                pageSize = pagging.PageSize < 10 ? 10 : pagging.PageSize;
-            }
-
-            query = query.Skip(page - 1 * pageSize).Take(pageSize);
-        }
-
-        /// <summary>
-        /// Include navigation properties.
-        /// </summary>
-        /// <param name="query"></param>
-        /// <param name="includes"></param>
-        private void ApplyIncludes(IQueryable<IEntity> query, string[]? navProperties)
-        {
-            if (navProperties != null && navProperties.Any())
-            {
-                foreach (var navProperty in navProperties)
-                {
-                    query = query.Include(navProperty);
-                }
-            }
+            return query.Skip((page - 1) * pageSize).Take(pageSize);
         }
     }
 }

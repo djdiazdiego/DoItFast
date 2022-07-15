@@ -10,6 +10,12 @@ namespace DoItFast.Domain.Core.Abstractions.Entities.Interfaces
         /// <summary>
         /// Name of the field.
         /// </summary>
-        public string Name { get; set; }
+        public string Name { get; }
+
+        /// <summary>
+        /// Set name
+        /// </summary>
+        /// <param name="name"></param>
+        public void SetName(string name);
     }
 }

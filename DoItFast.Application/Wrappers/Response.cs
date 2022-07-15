@@ -21,6 +21,7 @@ namespace DoItFast.Application.Wrappers
         /// <param name="message"></param>
         public Response(T data, string message = null)
         {
+            Code = 200;
             Succeeded = true;
             Message = message;
             Data = data;
@@ -34,6 +35,9 @@ namespace DoItFast.Application.Wrappers
             Succeeded = false;
             Message = message;
         }
+
+        /// <inheritdoc />
+        public int Code { get; set; }
 
         /// <inheritdoc />
         public bool Succeeded { get; set; }

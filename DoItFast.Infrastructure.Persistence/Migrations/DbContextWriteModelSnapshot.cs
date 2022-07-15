@@ -23,207 +23,111 @@ namespace DoItFast.Infrastructure.Persistence.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("DoItFast.Domain.Models.PlanAggregate.Admission", b =>
+            modelBuilder.Entity("DoItFast.Domain.Models.GatewayAggregate.Gateway", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("Id")
+                        .HasMaxLength(32)
+                        .HasColumnType("nvarchar(32)")
+                        .HasColumnName("SerialNumber");
 
-                    b.Property<int>("Amount")
-                        .HasColumnType("int");
+                    b.Property<DateTimeOffset>("Created")
+                        .HasColumnType("datetimeoffset");
 
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
+                    b.Property<string>("IpAddress")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(16)
+                        .HasColumnType("nvarchar(16)");
 
-                    b.Property<DateTime?>("LastModified")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset?>("LastModified")
+                        .HasColumnType("datetimeoffset");
 
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<string>("ReadableName")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
-                    b.Property<int>("PriorityTypeId")
-                        .HasColumnType("int");
+                    b.HasKey("Id")
+                        .HasName("SerialNumber");
 
-                    b.Property<Guid>("ProductId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<decimal>("TotalPrice")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<Guid?>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PriorityTypeId");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("Admission", "DoItFast");
+                    b.ToTable("Gateway", "DoItFast");
                 });
 
-            modelBuilder.Entity("DoItFast.Domain.Models.PlanAggregate.Plan", b =>
+            modelBuilder.Entity("DoItFast.Domain.Models.GatewayAggregate.PeripheralDevice", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<decimal>("Budget")
-                        .HasColumnType("decimal(18,2)");
+                    b.Property<DateTimeOffset>("Created")
+                        .HasColumnType("datetimeoffset");
 
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("LastModified")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
+                    b.Property<string>("GatewayId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(32)");
 
-                    b.Property<int>("PlanTypeId")
+                    b.Property<DateTimeOffset?>("LastModified")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<int>("PeripheralDeviceStatusId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("PlanningEndDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("PlanningStartDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("Vendor")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PlanTypeId");
+                    b.HasIndex("GatewayId");
 
-                    b.ToTable("Plan", "DoItFast");
+                    b.HasIndex("PeripheralDeviceStatusId");
+
+                    b.ToTable("PeripheralDevice", "DoItFast");
                 });
 
-            modelBuilder.Entity("DoItFast.Domain.Models.PlanAggregate.PlanType", b =>
+            modelBuilder.Entity("DoItFast.Domain.Models.GatewayAggregate.PeripheralDeviceStatus", b =>
                 {
                     b.Property<int>("Id")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset>("Created")
+                        .HasColumnType("datetimeoffset");
 
-                    b.Property<DateTime?>("LastModified")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("PlanType", "DoItFast");
-                });
-
-            modelBuilder.Entity("DoItFast.Domain.Models.PlanAggregate.PriorityType", b =>
-                {
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("LastModified")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset?>("LastModified")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("UserId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("PriorityType", "DoItFast");
+                    b.ToTable("PeripheralDeviceStatus", "DoItFast");
                 });
 
-            modelBuilder.Entity("DoItFast.Domain.Models.Product", b =>
+            modelBuilder.Entity("DoItFast.Domain.Models.GatewayAggregate.PeripheralDevice", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("LastModified")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Properties")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("UserId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Product", "DoItFast");
-                });
-
-            modelBuilder.Entity("DoItFast.Domain.Models.PlanAggregate.Admission", b =>
-                {
-                    b.HasOne("DoItFast.Domain.Models.PlanAggregate.Plan", null)
-                        .WithMany("Admissions")
-                        .HasForeignKey("Id")
+                    b.HasOne("DoItFast.Domain.Models.GatewayAggregate.Gateway", "Gateway")
+                        .WithMany("PeripheralDevices")
+                        .HasForeignKey("GatewayId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DoItFast.Domain.Models.PlanAggregate.PriorityType", "PriorityType")
+                    b.HasOne("DoItFast.Domain.Models.GatewayAggregate.PeripheralDeviceStatus", "PeripheralDeviceStatus")
                         .WithMany()
-                        .HasForeignKey("PriorityTypeId")
+                        .HasForeignKey("PeripheralDeviceStatusId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("DoItFast.Domain.Models.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                    b.Navigation("Gateway");
 
-                    b.Navigation("PriorityType");
-
-                    b.Navigation("Product");
+                    b.Navigation("PeripheralDeviceStatus");
                 });
 
-            modelBuilder.Entity("DoItFast.Domain.Models.PlanAggregate.Plan", b =>
+            modelBuilder.Entity("DoItFast.Domain.Models.GatewayAggregate.Gateway", b =>
                 {
-                    b.HasOne("DoItFast.Domain.Models.PlanAggregate.PlanType", "PlanType")
-                        .WithMany()
-                        .HasForeignKey("PlanTypeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("PlanType");
-                });
-
-            modelBuilder.Entity("DoItFast.Domain.Models.PlanAggregate.Plan", b =>
-                {
-                    b.Navigation("Admissions");
+                    b.Navigation("PeripheralDevices");
                 });
 #pragma warning restore 612, 618
         }

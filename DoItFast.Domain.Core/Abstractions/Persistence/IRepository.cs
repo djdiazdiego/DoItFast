@@ -20,6 +20,12 @@ namespace DoItFast.Domain.Core.Abstractions.Persistence
         EntityState Remove(TEntity entity);
 
         /// <summary>
+        /// Remove entities from repository.
+        /// </summary>
+        /// <param name="entities"></param>
+        void RemoveRange(params TEntity[] entities);
+
+        /// <summary>
         /// Update entity in a repository.
         /// </summary>
         /// <param name="entity"></param>

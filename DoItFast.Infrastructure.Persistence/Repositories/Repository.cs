@@ -38,6 +38,10 @@ namespace DoItFast.Infrastructure.Persistence.Repositories
             (Domain.Core.Enums.EntityState)_context.Set<TEntity>().Remove(entity).State;
 
         /// <inheritdoc />
+        public void RemoveRange(params TEntity[] entities) =>
+            _context.Set<TEntity>().RemoveRange(entities);
+
+        /// <inheritdoc />
         public Domain.Core.Enums.EntityState Update(TEntity entity) =>
             (Domain.Core.Enums.EntityState)_context.Set<TEntity>().Update(entity).State;
 
