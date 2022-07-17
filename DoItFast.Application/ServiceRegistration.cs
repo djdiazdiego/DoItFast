@@ -5,7 +5,6 @@ using DoItFast.Application.Services.Interfaces;
 using DoItFast.Application.Wrappers;
 using DoItFast.Domain.Core.Abstractions.Persistence;
 using DoItFast.Domain.Settings;
-using DoItFast.Infrastructure.Identity.Settings;
 using DoItFast.Infrastructure.Persistence.Contexts;
 using FluentValidation;
 using MediatR;

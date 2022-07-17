@@ -1,4 +1,4 @@
-﻿namespace DoItFast.Infrastructure.Identity.Settings
+﻿namespace DoItFast.Domain.Settings
 {
     public class JWTSettings
     {

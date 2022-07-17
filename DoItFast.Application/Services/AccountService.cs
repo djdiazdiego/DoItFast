@@ -1,12 +1,12 @@
-﻿using DoItFast.Application.Features.Dtos.Account;
+﻿using DoItFast.Application.Exceptions;
+using DoItFast.Application.Features.Dtos.Account;
 using DoItFast.Application.Features.Dtos.Email;
-using DoItFast.Application.Exceptions;
 using DoItFast.Application.Helpers;
 using DoItFast.Application.Services.Interfaces;
 using DoItFast.Application.Wrappers;
+using DoItFast.Domain.Settings;
 using DoItFast.Infrastructure.Identity.Enums;
 using DoItFast.Infrastructure.Identity.Models;
-using DoItFast.Infrastructure.Identity.Settings;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Options;

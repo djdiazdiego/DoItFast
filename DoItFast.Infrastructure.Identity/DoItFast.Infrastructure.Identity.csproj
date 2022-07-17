@@ -10,4 +10,8 @@
     <ProjectReference Include="..\DoItFast.Infrastructure.Shared\DoItFast.Infrastructure.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Settings\" />
+  </ItemGroup>
+
 </Project>

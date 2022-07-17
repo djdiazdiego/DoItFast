@@ -1,14 +1,10 @@
 ﻿using DoItFast.Domain.Settings;
 using DoItFast.Infrastructure.Identity.Contexts;
 using DoItFast.Infrastructure.Identity.Models;
-using DoItFast.Infrastructure.Identity.Settings;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
 
 namespace DoItFast.Infrastructure.Identity
 {
