@@ -1,4 +1,4 @@
-﻿using DoItFast.Application.MapConverters;
+﻿using DoItFast.Application.MappingConverters;
 using DoItFast.Domain.Core.Abstractions.Dtos;
 using DoItFast.Domain.Core.Attributes;
 using DoItFast.Domain.Models.GatewayAggregate;

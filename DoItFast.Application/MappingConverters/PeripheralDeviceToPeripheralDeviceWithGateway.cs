@@ -2,7 +2,7 @@
 using DoItFast.Application.Features.Dtos.Gateway;
 using DoItFast.Domain.Models.GatewayAggregate;
 
-namespace DoItFast.Application.MapConverters
+namespace DoItFast.Application.MappingConverters
 {
     public class PeripheralDeviceToPeripheralDeviceWithGateway : ITypeConverter<PeripheralDevice, PeripheralDeviceWithGatewayResponseDto>
     {
