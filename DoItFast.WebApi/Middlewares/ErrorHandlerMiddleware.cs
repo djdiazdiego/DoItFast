@@ -34,7 +34,7 @@ namespace DoItFast.WebApi.Middlewares
                     // custom application error
                     ApiException => (int)HttpStatusCode.BadRequest,
                     // custom validation error
-                    ValidationException => (int)HttpStatusCode.UnprocessableEntity,
+                    ValidationException => (int)HttpStatusCode.BadRequest,
                     // unhandled error
                     _ => (int)HttpStatusCode.InternalServerError
                 };

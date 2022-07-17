@@ -30,7 +30,7 @@ namespace DoItFast.WebApi.Controllers.V1
         /// <returns></returns>
         [HttpGet, Route("{id}")]
         [ProducesResponseType(typeof(Response<EnumerationDto>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ValidationResponse), StatusCodes.Status422UnprocessableEntity)]
+        [ProducesResponseType(typeof(ValidationResponse), StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<Response<EnumerationDto>>> Get(PeripheralDeviceStatusValues id, CancellationToken cancellationToken) =>
             await this.BuildGetDeleteAsync<PeripheralDeviceStatusValues, EnumerationDto>(id, _mediator, typeof(PeripheralDeviceStatusGetQuery), cancellationToken);
 

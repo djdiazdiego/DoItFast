@@ -33,7 +33,7 @@ namespace DoItFast.WebApi.Controllers.V1
         /// <returns></returns>
         [HttpGet, Route("page")]
         [ProducesResponseType(typeof(Response<GatewayFilterResponseDto>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ValidationResponse), StatusCodes.Status422UnprocessableEntity)]
+        [ProducesResponseType(typeof(ValidationResponse), StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<Response<GatewayFilterResponseDto>>> Page([FromQuery] GatewayFilterRequestDto filter, CancellationToken cancellationToken) =>
             await this.BuildFilterAsync<GatewayFilterRequestDto, GatewayResponseDto, GatewayFilterResponseDto>(filter, _mapper, _mediator, cancellationToken);
 
@@ -45,7 +45,7 @@ namespace DoItFast.WebApi.Controllers.V1
         /// <returns></returns>
         [HttpPost]
         [ProducesResponseType(typeof(Response<GatewayResponseDto>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ValidationResponse), StatusCodes.Status422UnprocessableEntity)]
+        [ProducesResponseType(typeof(ValidationResponse), StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<Response<GatewayResponseDto>>> Post([FromBody] GatewayCreateRequestDto dto, CancellationToken cancellationToken) =>
            await this.BuildGenericAsync<GatewayCreateRequestDto, GatewayResponseDto>(dto, _mapper, _mediator, typeof(GatewayCreateCommand), cancellationToken);
 
@@ -57,7 +57,7 @@ namespace DoItFast.WebApi.Controllers.V1
         /// <returns></returns>
         [HttpPut]
         [ProducesResponseType(typeof(Response<GatewayResponseDto>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ValidationResponse), StatusCodes.Status422UnprocessableEntity)]
+        [ProducesResponseType(typeof(ValidationResponse), StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<Response<GatewayResponseDto>>> Put([FromBody] GatewayUpdateRequestDto dto, CancellationToken cancellationToken) =>
             await this.BuildGenericAsync<GatewayUpdateRequestDto, GatewayResponseDto>(dto, _mapper, _mediator, typeof(GatewayUpdateCommand), cancellationToken);
 
@@ -69,7 +69,7 @@ namespace DoItFast.WebApi.Controllers.V1
         /// <returns></returns>
         [HttpDelete]
         [ProducesResponseType(typeof(Response<GatewayResponseDto>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ValidationResponse), StatusCodes.Status422UnprocessableEntity)]
+        [ProducesResponseType(typeof(ValidationResponse), StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<Response<GatewayResponseDto>>> Delete([FromBody] string id, CancellationToken cancellationToken) =>
             await this.BuildGetDeleteAsync<string, GatewayResponseDto>(id, _mediator, typeof(GatewayDeleteCommand), cancellationToken);
 
@@ -81,7 +81,7 @@ namespace DoItFast.WebApi.Controllers.V1
         /// <returns></returns>
         [HttpPatch, Route("update-device")]
         [ProducesResponseType(typeof(Response<PeripheralDeviceResponseDto>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ValidationResponse), StatusCodes.Status422UnprocessableEntity)]
+        [ProducesResponseType(typeof(ValidationResponse), StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<Response<PeripheralDeviceResponseDto>>> UpdatePeripheralDevice([FromBody] GatewayUpdatePeripheralDeviceRequestDto dto, CancellationToken cancellationToken)
         {
             return await this.BuildGenericAsync<GatewayUpdatePeripheralDeviceRequestDto, PeripheralDeviceResponseDto>(dto, _mapper, _mediator, typeof(GatewayUpdatePeripheralDeviceCommand), cancellationToken);
@@ -95,7 +95,7 @@ namespace DoItFast.WebApi.Controllers.V1
         /// <returns></returns>
         [HttpDelete, Route("delete-device")]
         [ProducesResponseType(typeof(Response<PeripheralDeviceResponseDto>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ValidationResponse), StatusCodes.Status422UnprocessableEntity)]
+        [ProducesResponseType(typeof(ValidationResponse), StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<Response<PeripheralDeviceResponseDto>>> DeletePeripheralDevice([FromBody] GatewayDeletePeripheralDeviceRequestDto dto, CancellationToken cancellationToken)
         {
             return await this.BuildGenericAsync<GatewayDeletePeripheralDeviceRequestDto, PeripheralDeviceResponseDto>(dto, _mapper, _mediator, typeof(GatewayDeletePeripheralDeviceCommand), cancellationToken);
