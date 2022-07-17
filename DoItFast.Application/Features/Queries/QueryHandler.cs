@@ -116,7 +116,7 @@ namespace DoItFast.Application.Features.Queries
             var query = request.BuildFilter(_repository);
             var total = await query.CountAsync(cancellationToken);
 
-            query = request.BuildOrder(query, request.Order);
+            query = request.BuildOrder(query);
             query = query.BuildPagging(request.Pagging);
 
             var entities = await query.ToListAsync(cancellationToken);

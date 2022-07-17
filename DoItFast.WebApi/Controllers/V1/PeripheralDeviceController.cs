@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using DoItFast.Application.Extensions;
 using DoItFast.Application.Features.Dtos.Gateway;
 using DoItFast.Application.Wrappers;
 using MediatR;
@@ -7,10 +8,15 @@ using Microsoft.AspNetCore.Mvc;
 namespace DoItFast.WebApi.Controllers.V1
 {
     [ApiVersion("1.0")]
-    public class PeripheralDeviceController : ApiFilterControllerBase<PeripheralDeviceFilterRequestDto, PeripheralDeviceWithGatewayResponseDto, PeripheralDeviceFilterResponseDto>
+    public class PeripheralDeviceController : ApiControllerBase
     {
-        public PeripheralDeviceController(IMediator mediator, IMapper mapper) : base(mediator, mapper)
+        protected readonly IMediator _mediator;
+        protected readonly IMapper _mapper;
+
+        public PeripheralDeviceController(IMediator mediator, IMapper mapper)
         {
+            _mediator = mediator;
+            _mapper = mapper;
         }
 
         /// <summary>
@@ -19,10 +25,9 @@ namespace DoItFast.WebApi.Controllers.V1
         /// <param name="filter"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
+        [HttpGet, Route("page")]
         [ProducesResponseType(typeof(Response<PeripheralDeviceFilterResponseDto>), StatusCodes.Status200OK)]
-        public override async Task<ActionResult<Response<PeripheralDeviceFilterResponseDto>>> Page([FromQuery] PeripheralDeviceFilterRequestDto filter, CancellationToken cancellationToken)
-        {
-            return await base.Page(filter, cancellationToken);
-        }
+        public async Task<ActionResult<Response<PeripheralDeviceFilterResponseDto>>> Page([FromQuery] PeripheralDeviceFilterRequestDto filter, CancellationToken cancellationToken) =>
+            await this.BuildFilterAsync<PeripheralDeviceFilterRequestDto, PeripheralDeviceWithGatewayResponseDto, PeripheralDeviceFilterResponseDto>(filter, _mapper, _mediator, cancellationToken);
     }
 }

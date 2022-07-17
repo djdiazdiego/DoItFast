@@ -64,7 +64,7 @@ namespace DoItFast.Application.Features.Queries
         public abstract IQueryable<TModel> BuildFilter(IQueryRepository<TModel> queryRepository);
 
         /// <summary>
-        /// To custom order
+        /// To build order
         /// </summary>
         /// <param name="query"></param>
         /// <returns></returns>

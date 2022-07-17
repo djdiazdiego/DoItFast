@@ -1,4 +1,6 @@
-﻿using DoItFast.Application.Features.Dtos;
+﻿using DoItFast.Application.Extensions;
+using DoItFast.Application.Features.Dtos;
+using DoItFast.Application.Features.Queries.PeripheralDeviceStatus;
 using DoItFast.Application.Wrappers;
 using DoItFast.Domain.Models.GatewayAggregate;
 using MediatR;
@@ -7,10 +9,17 @@ using Microsoft.AspNetCore.Mvc;
 namespace DoItFast.WebApi.Controllers.V1
 {
     [ApiVersion("1.0")]
-    public class PeripheralDeviceStatusController : ApiReadControllerBase<PeripheralDeviceStatusValues, EnumerationDto>
+    public class PeripheralDeviceStatusController : ApiControllerBase
     {
-        public PeripheralDeviceStatusController(IMediator mediator) : base(mediator)
+        private readonly IMediator _mediator;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="mediator"></param>
+        public PeripheralDeviceStatusController(IMediator mediator)
         {
+            _mediator = mediator;
         }
 
         /// <summary>
@@ -19,18 +28,20 @@ namespace DoItFast.WebApi.Controllers.V1
         /// <param name="id"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
+        [HttpGet, Route("{id}")]
         [ProducesResponseType(typeof(Response<EnumerationDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ValidationResponse), StatusCodes.Status422UnprocessableEntity)]
-        public override async Task<ActionResult<Response<EnumerationDto>>> Get(PeripheralDeviceStatusValues id, CancellationToken cancellationToken) =>
-            await base.Get(id, cancellationToken);
+        public async Task<ActionResult<Response<EnumerationDto>>> Get(PeripheralDeviceStatusValues id, CancellationToken cancellationToken) =>
+            await this.BuildGetDeleteAsync<PeripheralDeviceStatusValues, EnumerationDto>(id, _mediator, typeof(PeripheralDeviceStatusGetQuery), cancellationToken);
 
         /// <summary>
         /// Get Peripheral Devices status.
         /// </summary>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
+        [HttpGet, Route("all")]
         [ProducesResponseType(typeof(Response<EnumerationDto[]>), StatusCodes.Status200OK)]
-        public override async Task<ActionResult<Response<EnumerationDto[]>>> GetAll(CancellationToken cancellationToken) =>
-            await base.GetAll(cancellationToken);
+        public async Task<ActionResult<Response<EnumerationDto[]>>> GetAll(CancellationToken cancellationToken) =>
+            await this.BuildGetAllAsync<PeripheralDeviceStatusValues, EnumerationDto>(_mediator, cancellationToken);
     }
 }
