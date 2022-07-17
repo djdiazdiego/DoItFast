@@ -16,11 +16,14 @@ namespace DoItFast.Infrastructure.Persistence.Configurations
                 .HasColumnName(nameof(Gateway.SerialNumber))
                 .HasMaxLength(32);
             builder.Property(p => p.ReadableName)
-                .HasMaxLength(128);
+                .HasMaxLength(64);
             builder.Property(p => p.IpAddress)
                 .HasMaxLength(16);
 
-            builder.HasMany(p => p.PeripheralDevices).WithOne(p => p.Gateway).HasForeignKey(p => p.GatewayId).OnDelete(DeleteBehavior.Cascade);
+            builder.HasMany(p => p.PeripheralDevices)
+                .WithOne(p => p.Gateway)
+                .HasForeignKey(p => p.GatewayId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

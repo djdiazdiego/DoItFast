@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
-using DoItFast.Application.Dtos.Gateway;
+using DoItFast.Application.Extensions;
+using DoItFast.Application.Features.Command.Gateway;
+using DoItFast.Application.Features.Dtos.Gateway;
 using DoItFast.Application.Wrappers;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -64,6 +66,37 @@ namespace DoItFast.WebApi.Controllers.V1
         {
             return await base.Delete(id, cancellationToken);
         }
+
+        /// <summary>
+        /// Update Peripheral Device
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [HttpPatch]
+        [Route("update-device")]
+        [ProducesResponseType(typeof(Response<PeripheralDeviceResponseDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ValidationResponse), StatusCodes.Status422UnprocessableEntity)]
+        public async Task<ActionResult<Response<PeripheralDeviceResponseDto>>> UpdatePeripheralDevice([FromBody] GatewayUpdatePeripheralDeviceRequestDto dto, CancellationToken cancellationToken)
+        {
+            return await this.BuildGenericAsync<GatewayUpdatePeripheralDeviceRequestDto, PeripheralDeviceResponseDto>(dto, _mapper, _mediator, typeof(GatewayUpdatePeripheralDeviceCommand), cancellationToken);
+        }
+
+        /// <summary>
+        /// Delete Peripheral Device
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        [HttpDelete]
+        [Route("delete-device")]
+        [ProducesResponseType(typeof(Response<PeripheralDeviceResponseDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ValidationResponse), StatusCodes.Status422UnprocessableEntity)]
+        public async Task<ActionResult<Response<PeripheralDeviceResponseDto>>> DeletePeripheralDevice([FromBody] GatewayDeletePeripheralDeviceRequestDto dto, CancellationToken cancellationToken)
+        {
+            return await this.BuildGenericAsync<GatewayDeletePeripheralDeviceRequestDto, PeripheralDeviceResponseDto>(dto, _mapper, _mediator, typeof(GatewayDeletePeripheralDeviceCommand), cancellationToken);
+        }
+
 
         [ApiExplorerSettings(IgnoreApi = true)]
         public override Task<ActionResult<Response<GatewayResponseDto>>> Get(string id, CancellationToken cancellationToken)

@@ -1,4 +1,4 @@
-﻿using DoItFast.Application.Dtos.Email;
+﻿using DoItFast.Application.Features.Dtos.Email;
 
 namespace DoItFast.Application.Services.Interfaces
 {

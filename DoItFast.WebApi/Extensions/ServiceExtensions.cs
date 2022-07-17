@@ -1,9 +1,4 @@
-﻿using DoItFast.Application.Extensions;
-using DoItFast.Domain.Core.Abstractions.Wrappers;
-using DoItFast.WebApi.Filters;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Formatters;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 
@@ -41,7 +36,6 @@ namespace DoItFast.WebApi.Extensions
                 options.UseInlineDefinitionsForEnums();
                 options.DescribeAllParametersInCamelCase();
                 options.UseAllOfToExtendReferenceSchemas();
-                options.SchemaFilter<SwaggerExcludeFilter>();
 
                 var versions = new[] { "v1" };
 

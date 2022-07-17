@@ -1,4 +1,4 @@
-﻿using DoItFast.Application.Dtos;
+﻿using DoItFast.Application.Features.Dtos;
 using DoItFast.Application.Wrappers;
 using DoItFast.Domain.Models.GatewayAggregate;
 using MediatR;

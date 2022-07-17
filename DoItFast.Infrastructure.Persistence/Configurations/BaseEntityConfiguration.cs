@@ -11,7 +11,7 @@ namespace DoItFast.Infrastructure.Persistence.Configurations
         {
             builder.ToTable(typeof(TEntity).Name);
 
-            builder.Property(p => p.Created).IsRequired();
+            builder.Property(p => p.Created);
             builder.Property(p => p.LastModified);
         }
     }

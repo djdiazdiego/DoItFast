@@ -1,4 +1,4 @@
-﻿using DoItFast.Application.Dtos.Account;
+﻿using DoItFast.Application.Features.Dtos.Account;
 using DoItFast.Application.Services.Interfaces;
 using DoItFast.WebApi.Controllers;
 using Microsoft.AspNetCore.Mvc;

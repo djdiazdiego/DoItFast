@@ -43,8 +43,8 @@ namespace DoItFast.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("ReadableName")
                         .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
 
                     b.HasKey("Id")
                         .HasName("SerialNumber");
@@ -73,8 +73,8 @@ namespace DoItFast.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("Vendor")
                         .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
 
                     b.HasKey("Id");
 
@@ -98,8 +98,8 @@ namespace DoItFast.Infrastructure.Persistence.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasMaxLength(64)
+                        .HasColumnType("nvarchar(64)");
 
                     b.HasKey("Id");
 

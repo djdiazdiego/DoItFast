@@ -12,9 +12,13 @@ namespace DoItFast.Infrastructure.Persistence.Configurations
 
             builder.HasKey(p => p.Id);
 
-            builder.Property(p=> p.Vendor).HasMaxLength(128);
+            builder.Property(p=> p.Vendor)
+                .HasMaxLength(64);
 
-            builder.HasOne(p => p.PeripheralDeviceStatus).WithMany().HasForeignKey(p => p.PeripheralDeviceStatusId).OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(p => p.PeripheralDeviceStatus)
+                .WithMany()
+                .HasForeignKey(p => p.PeripheralDeviceStatusId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

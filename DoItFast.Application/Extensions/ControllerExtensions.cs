@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using DoItFast.Application.Dtos;
-using DoItFast.Application.Queries;
+using DoItFast.Application.Features.Dtos;
+using DoItFast.Application.Features.Queries;
 using DoItFast.Application.Wrappers;
 using DoItFast.Domain.Core.Abstractions.Dtos;
 using DoItFast.Domain.Core.Abstractions.Queries;
@@ -30,7 +30,7 @@ namespace DoItFast.Application.Extensions
             return controller.Ok(result);
         }
 
-        public static async Task<ActionResult<Response<TResponse>>> BuildPostPutAsync<TRequest, TResponse>(
+        public static Task<ActionResult<Response<TResponse>>> BuildPostPutPatchAsync<TRequest, TResponse>(
             this Controller controller,
             TRequest dto,
             IMapper mapper,
@@ -40,11 +40,7 @@ namespace DoItFast.Application.Extensions
             where TRequest : class, IDto
             where TResponse : class, IDto
         {
-            var type = commandType.GetConcreteTypeWithFilter();
-            var command = Activator.CreateInstance(type);
-            mapper.Map(dto, command);
-            var result = await mediator.Send(command, cancellationToken);
-            return controller.Ok(result);
+            return controller.BuildGenericAsync<TRequest, TResponse>(dto, mapper, mediator, commandType, cancellationToken);
         }
 
         public static async Task<ActionResult<Response<TResponse>>> BuildGetDeleteAsync<TKey, TResponse>(
@@ -76,5 +72,21 @@ namespace DoItFast.Application.Extensions
             return controller.Ok(result);
         }
 
+        public static async Task<ActionResult<Response<TResponse>>> BuildGenericAsync<TRequest, TResponse>(
+            this Controller controller,
+            TRequest dto,
+            IMapper mapper,
+            IMediator mediator,
+            Type queryCommandType,
+            CancellationToken cancellationToken)
+            where TRequest : class, IDto
+            where TResponse : class, IDto
+        {
+            var type = queryCommandType.GetConcreteTypeWithFilter();
+            var command = Activator.CreateInstance(type);
+            mapper.Map(dto, command);
+            var result = await mediator.Send(command, cancellationToken);
+            return controller.Ok(result);
+        }
     }
 }

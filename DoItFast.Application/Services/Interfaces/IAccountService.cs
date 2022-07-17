@@ -1,4 +1,4 @@
-﻿using DoItFast.Application.Dtos.Account;
+﻿using DoItFast.Application.Features.Dtos.Account;
 using DoItFast.Application.Wrappers;
 
 namespace DoItFast.Application.Services.Interfaces

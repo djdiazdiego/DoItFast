@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using DoItFast.Application.Command;
+using DoItFast.Application.Features.Command;
 using DoItFast.Application.Exceptions;
 using DoItFast.Application.Extensions;
-using DoItFast.Application.Queries;
+using DoItFast.Application.Features.Queries;
 using DoItFast.Application.Wrappers;
 using DoItFast.Domain.Core.Abstractions.Dtos;
 using DoItFast.Domain.Core.Abstractions.Wrappers;
@@ -96,11 +96,11 @@ namespace DoItFast.WebApi.Controllers
     /// <summary>
     /// Filter operations
     /// </summary>
-    /// <typeparam name="TRequest"></typeparam>
+    /// <typeparam name="TFilterRequest"></typeparam>
     /// <typeparam name="TResponse"></typeparam>
     /// <typeparam name="TFilterResponse"></typeparam>
-    public abstract class ApiFilterControllerBase<TRequest, TResponse, TFilterResponse> : ApiControllerBase
-        where TRequest : class, IFilter, IDto
+    public abstract class ApiFilterControllerBase<TFilterRequest, TResponse, TFilterResponse> : ApiControllerBase
+        where TFilterRequest : class, IFilter, IDto
         where TResponse : class, IDto
         where TFilterResponse : class, IFilterResponseDto<TResponse>, IDto
     {
@@ -120,9 +120,9 @@ namespace DoItFast.WebApi.Controllers
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         [HttpGet(), Route("page")]
-        public virtual async Task<ActionResult<Response<TFilterResponse>>> Page([FromQuery] TRequest filter, CancellationToken cancellationToken)
+        public virtual async Task<ActionResult<Response<TFilterResponse>>> Page([FromQuery] TFilterRequest filter, CancellationToken cancellationToken)
         {
-            return await this.BuildFilterAsync<TRequest, TResponse, TFilterResponse>(filter, _mapper, _mediator, cancellationToken);
+            return await this.BuildFilterAsync<TFilterRequest, TResponse, TFilterResponse>(filter, _mapper, _mediator, cancellationToken);
         }
     }
 
@@ -186,7 +186,7 @@ namespace DoItFast.WebApi.Controllers
         [HttpPost()]
         public virtual async Task<ActionResult<Response<TResponse>>> Post([FromBody] TCreateRequest dto, CancellationToken cancellationToken)
         {
-            return await this.BuildPostPutAsync<TCreateRequest, TResponse>(dto, _mapper, _mediator, typeof(Command<TResponse>), cancellationToken);
+            return await this.BuildGenericAsync<TCreateRequest, TResponse>(dto, _mapper, _mediator, typeof(Command<TResponse>), cancellationToken);
         }
 
         /// <summary>
@@ -198,7 +198,7 @@ namespace DoItFast.WebApi.Controllers
         [HttpPut()]
         public virtual async Task<ActionResult<Response<TResponse>>> Put([FromBody] TUpdateRequest dto, CancellationToken cancellationToken)
         {
-            return await this.BuildPostPutAsync<TUpdateRequest, TResponse>(dto, _mapper, _mediator, typeof(UpdateCommand<TKey, TResponse>), cancellationToken);
+            return await this.BuildGenericAsync<TUpdateRequest, TResponse>(dto, _mapper, _mediator, typeof(UpdateCommand<TKey, TResponse>), cancellationToken);
         }
 
         /// <summary>

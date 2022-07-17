@@ -73,28 +73,45 @@ namespace DoItFast.Domain.Models.GatewayAggregate
         /// <param name="peripheralDeviceId"></param>
         /// <param name="vendor"></param>
         /// <param name="peripheralDeviceStatusId"></param>
-        public void UpdatePeripheralDevice(Guid peripheralDeviceId, string vendor, PeripheralDeviceStatusValues peripheralDeviceStatusId)
+        public PeripheralDevice UpdatePeripheralDevice(Guid peripheralDeviceId, string vendor, PeripheralDeviceStatusValues peripheralDeviceStatusId)
         {
             var peripheralDevice = _peripheralDevices.FirstOrDefault(p => p.Id == peripheralDeviceId);
 
             if (peripheralDevice != null)
+            {
                 peripheralDevice.Update(vendor, peripheralDeviceStatusId);
+                return peripheralDevice;
+            }
+            return null;
         }
 
         /// <summary>
         /// Remove Peripheral Device.
         /// </summary>
         /// <param name="peripheralDeviceId"></param>
-        public void RemovePeripheralDevice(Guid peripheralDeviceId)
+        public PeripheralDevice RemovePeripheralDevice(Guid peripheralDeviceId)
         {
             var peripheralDevice = _peripheralDevices.FirstOrDefault(p => p.Id == peripheralDeviceId);
 
             if (peripheralDevice != null)
+            {
+                var peripheralDeviceToReturn = peripheralDevice;
                 _peripheralDevices.Remove(peripheralDevice);
+                return peripheralDeviceToReturn;
+            }
+
+            return null;
         }
 
         /// <summary>
-        /// Clear Peripheral Device
+        /// Remove Peripheral Device
+        /// </summary>
+        /// <param name="peripheralDevice"></param>
+        public void RemovePeripheralDevice(PeripheralDevice peripheralDevice) =>
+            _peripheralDevices.Remove(peripheralDevice);
+
+        /// <summary>
+        /// Clear Peripheral Devices
         /// </summary>
         public void CleanPeripheralDevices() => _peripheralDevices.Clear();
     }

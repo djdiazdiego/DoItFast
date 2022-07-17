@@ -1,5 +1,5 @@
-﻿using DoItFast.Application.Dtos.Account;
-using DoItFast.Application.Dtos.Email;
+﻿using DoItFast.Application.Features.Dtos.Account;
+using DoItFast.Application.Features.Dtos.Email;
 using DoItFast.Application.Exceptions;
 using DoItFast.Application.Helpers;
 using DoItFast.Application.Services.Interfaces;

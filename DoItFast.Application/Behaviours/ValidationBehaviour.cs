@@ -1,5 +1,7 @@
 ﻿using FluentValidation;
+using FluentValidation.Results;
 using MediatR;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DoItFast.Application.Behaviours
 {
