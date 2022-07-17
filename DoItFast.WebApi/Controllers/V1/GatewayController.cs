@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using DoItFast.Application.Extensions;
 using DoItFast.Application.Features.Command.Gateway;
 using DoItFast.Application.Features.Dtos.Gateway;
 using DoItFast.Application.Wrappers;
+using DoItFast.WebApi.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

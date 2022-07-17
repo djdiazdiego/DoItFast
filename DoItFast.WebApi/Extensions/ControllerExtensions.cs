@@ -9,7 +9,7 @@ using DoItFast.Infrastructure.Shared.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace DoItFast.Application.Extensions
+namespace DoItFast.WebApi.Extensions
 {
     public static class ControllerExtensions
     {

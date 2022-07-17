@@ -1,8 +1,8 @@
-﻿using DoItFast.Application.Extensions;
-using DoItFast.Application.Features.Dtos;
+﻿using DoItFast.Application.Features.Dtos;
 using DoItFast.Application.Features.Queries.PeripheralDeviceStatus;
 using DoItFast.Application.Wrappers;
 using DoItFast.Domain.Models.GatewayAggregate;
+using DoItFast.WebApi.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
