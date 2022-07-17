@@ -67,8 +67,7 @@ namespace DoItFast.Application.Features.Queries
         /// To custom order
         /// </summary>
         /// <param name="query"></param>
-        /// <param name="order"></param>
         /// <returns></returns>
-        public virtual IQueryable<TModel> BuildOrder(IQueryable<TModel> query, IOrder order) => query.ApplyOrder(order);
+        public virtual IQueryable<TModel> BuildOrder(IQueryable<TModel> query) => query.ApplyOrder(this.Order);
     }
 }

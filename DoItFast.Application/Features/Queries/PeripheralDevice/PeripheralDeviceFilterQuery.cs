@@ -18,18 +18,19 @@ namespace DoItFast.Application.Features.Queries.PeripheralDevice
             return query;
         }
 
-        public override IQueryable<Domain.Models.GatewayAggregate.PeripheralDevice> BuildOrder(IQueryable<Domain.Models.GatewayAggregate.PeripheralDevice> query, IOrder order)
+        public override IQueryable<Domain.Models.GatewayAggregate.PeripheralDevice> BuildOrder(IQueryable<Domain.Models.GatewayAggregate.PeripheralDevice> query)
         {
+            var order = this.Order;
             var sortOperation = order.SortOperation == default ? SortOperation.ASC : order.SortOperation;
 
-            if (order?.SortBy == "SerialNumber")
+            if (order?.SortBy == nameof(PeripheralDeviceWithGatewayResponseDto.SerialNumber))
                 return sortOperation == SortOperation.ASC ? query.OrderBy(p => p.Gateway.Id) : query.OrderByDescending(p => p.Gateway.Id);
-            else if (order?.SortBy == "IpAddress")
+            else if (order?.SortBy == nameof(PeripheralDeviceWithGatewayResponseDto.IpAddress))
                 return sortOperation == SortOperation.ASC ? query.OrderBy(p => p.Gateway.IpAddress) : query.OrderByDescending(p => p.Gateway.IpAddress);
-            else if (order?.SortBy == "ReadableName")
+            else if (order?.SortBy == nameof(PeripheralDeviceWithGatewayResponseDto.ReadableName))
                 return sortOperation == SortOperation.ASC ? query.OrderBy(p => p.Gateway.ReadableName) : query.OrderByDescending(p => p.Gateway.ReadableName);
             else
-                return base.BuildOrder(query, order);
+                return base.BuildOrder(query);
         }
     }
 
