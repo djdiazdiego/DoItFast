@@ -16,7 +16,7 @@ namespace DoItFast.Infrastructure.Shared
         public static void AddSharedInfrastructureServices(this IServiceCollection services)
         {
             services.AddSingleton<ISqlGuidGenerator, SequentialGuidGeneratorService>();
-            services.AddScoped<IAuthenticatedUserService, AuthenticatedUserService>();
+            //services.AddScoped<IAuthenticatedUserService, AuthenticatedUserService>();
         }
     }
 

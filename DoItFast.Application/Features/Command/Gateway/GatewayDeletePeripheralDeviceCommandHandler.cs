@@ -49,7 +49,7 @@ namespace DoItFast.Application.Features.Command.Gateway
 
         private Domain.Models.GatewayAggregate.PeripheralDevice DeletePeripheralDevice(Domain.Models.GatewayAggregate.Gateway gateway, GatewayDeletePeripheralDeviceCommand request)
         {
-            var peripheralDeviceToTrack = gateway.RemovePeripheralDevice(request.PeripheralDeviceId);
+            var peripheralDeviceToTrack = gateway.RemovePeripheralDevice(request.Id);
             _deviceRepository.Remove(peripheralDeviceToTrack);
             return peripheralDeviceToTrack;
         }

@@ -67,7 +67,7 @@ namespace DoItFast.Application.Features.ValidatorExtensions
             this IRuleBuilder<T, PeripheralDeviceToUpdateDeleteModel> ruleBuilder,
             IQueryRepository<Gateway> gatewayQueryRepository) =>
             ruleBuilder.MustAsync((command, cancellationToken) =>
-                gatewayQueryRepository.FindAll().AnyAsync(s => s.Id.Equals(command.SerialNumber) && s.PeripheralDevices.Any(p => p.Id.Equals(command.PeripheralDeviceId)), cancellationToken))
+                gatewayQueryRepository.FindAll().AnyAsync(s => s.Id.Equals(command.SerialNumber) && s.PeripheralDevices.Any(p => p.Id.Equals(command.Id)), cancellationToken))
                     .WithMessage(GeneralMessages.NotFound.GetDescription());
     }
 }

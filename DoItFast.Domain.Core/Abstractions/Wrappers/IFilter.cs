@@ -13,7 +13,7 @@ namespace DoItFast.Domain.Core.Abstractions.Wrappers
     /// <summary>
     /// Page and page size.
     /// </summary>
-    public interface IPagging
+    public interface IPaging
     {
         /// <summary>
         /// Current diplayed page.

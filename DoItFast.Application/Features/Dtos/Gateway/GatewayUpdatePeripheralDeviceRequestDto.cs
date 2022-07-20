@@ -15,7 +15,7 @@ namespace DoItFast.Application.Features.Dtos.Gateway
         /// <summary>
         /// Peripheral Device identifier
         /// </summary>
-        public Guid PeripheralDeviceId { get; set; }
+        public Guid Id { get; set; }
 
         /// <summary>
         /// Vendor.

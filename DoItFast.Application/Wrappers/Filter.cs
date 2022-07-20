@@ -10,7 +10,7 @@ namespace DoItFast.Application.Wrappers
         /// <summary>
         /// Contain page information.
         /// </summary>
-        public PaggingModel Pagging { get; set; }
+        public PagingModel Paging { get; set; }
         /// <summary>
         /// Array of column, the ordenation is in the order on the array.
         /// </summary>
@@ -18,7 +18,7 @@ namespace DoItFast.Application.Wrappers
     }
 
     ///<inheritdoc/>
-    public class PaggingModel : IPagging
+    public class PagingModel : IPaging
     {
         private const int DefaultPage = 1;
         private const int DefaultPageSize = 10;

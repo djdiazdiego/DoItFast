@@ -49,7 +49,7 @@ namespace DoItFast.Application.Features.Command.Gateway
 
         private Domain.Models.GatewayAggregate.PeripheralDevice UpdatePeripheralDevice(Domain.Models.GatewayAggregate.Gateway gateway, GatewayUpdatePeripheralDeviceCommand request)
         {
-            var peripheralDeviceToTrack = gateway.UpdatePeripheralDevice(request.PeripheralDeviceId, request.Vendor, request.PeripheralDeviceStatusId);
+            var peripheralDeviceToTrack = gateway.UpdatePeripheralDevice(request.Id, request.Vendor, request.PeripheralDeviceStatusId);
             _deviceRepository.Update(peripheralDeviceToTrack);
             return peripheralDeviceToTrack;
         }

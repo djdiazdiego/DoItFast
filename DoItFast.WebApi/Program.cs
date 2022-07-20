@@ -1,6 +1,5 @@
 using DoItFast.Application;
 using DoItFast.Application.Helpers;
-using DoItFast.Infrastructure.Identity;
 using DoItFast.Infrastructure.Persistence;
 using DoItFast.Infrastructure.Shared;
 using DoItFast.WebApi.Extensions;
@@ -11,9 +10,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddSharedInfrastructureServices();
 builder.Services.AddPersistenceInfrastructureServices(builder.Configuration);
-builder.Services.AddIdentityInfrastructureServices(builder.Configuration);
+//builder.Services.AddIdentityInfrastructureServices(builder.Configuration);
 builder.Services.AddApplicationLayerServices(builder.Configuration);
-builder.Services.AddWebApiServices();
+builder.AddWebApiServices();
 
 // Add middlewares.
 
@@ -28,15 +27,20 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseErrorHandlingMiddleware();
-app.UseCors("AllowOrigin");
+
 app.UseHttpsRedirection();
 app.UseRouting();
 
-//app.UseAuthorization();
+app.UseCors();
+
+app.UseStaticFiles();
+app.UseSpaStaticFiles();
 
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllers();
 });
+
+app.UseSpa();
 
 await app.RunAsync();

@@ -117,7 +117,7 @@ namespace DoItFast.Application.Features.Queries
             var total = await query.CountAsync(cancellationToken);
 
             query = request.BuildOrder(query);
-            query = query.BuildPagging(request.Pagging);
+            query = query.BuildPagging(request.Paging);
 
             var entities = await query.ToListAsync(cancellationToken);
             var entitiesDto = _mapper.Map<List<TResponseDto>>(entities);

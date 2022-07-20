@@ -70,35 +70,7 @@ namespace DoItFast.WebApi.Controllers.V1
         [HttpDelete]
         [ProducesResponseType(typeof(Response<GatewayResponseDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ValidationResponse), StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<Response<GatewayResponseDto>>> Delete([FromBody] string id, CancellationToken cancellationToken) =>
+        public async Task<ActionResult<Response<GatewayResponseDto>>> Delete(string id, CancellationToken cancellationToken) =>
             await this.BuildGetDeleteAsync<string, GatewayResponseDto>(id, _mediator, typeof(GatewayDeleteCommand), cancellationToken);
-
-        /// <summary>
-        /// Update Peripheral Device
-        /// </summary>
-        /// <param name="dto"></param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        [HttpPatch, Route("update-device")]
-        [ProducesResponseType(typeof(Response<PeripheralDeviceResponseDto>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ValidationResponse), StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<Response<PeripheralDeviceResponseDto>>> UpdatePeripheralDevice([FromBody] GatewayUpdatePeripheralDeviceRequestDto dto, CancellationToken cancellationToken)
-        {
-            return await this.BuildGenericAsync<GatewayUpdatePeripheralDeviceRequestDto, PeripheralDeviceResponseDto>(dto, _mapper, _mediator, typeof(GatewayUpdatePeripheralDeviceCommand), cancellationToken);
-        }
-
-        /// <summary>
-        /// Delete Peripheral Device
-        /// </summary>
-        /// <param name="dto"></param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        [HttpDelete, Route("delete-device")]
-        [ProducesResponseType(typeof(Response<PeripheralDeviceResponseDto>), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ValidationResponse), StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<Response<PeripheralDeviceResponseDto>>> DeletePeripheralDevice([FromBody] GatewayDeletePeripheralDeviceRequestDto dto, CancellationToken cancellationToken)
-        {
-            return await this.BuildGenericAsync<GatewayDeletePeripheralDeviceRequestDto, PeripheralDeviceResponseDto>(dto, _mapper, _mediator, typeof(GatewayDeletePeripheralDeviceCommand), cancellationToken);
-        }
     }
 }

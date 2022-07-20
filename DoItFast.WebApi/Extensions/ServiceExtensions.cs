@@ -6,21 +6,13 @@ namespace DoItFast.WebApi.Extensions
 {
     public static class ServiceExtensions
     {
-        public static void AddWebApiServices(this IServiceCollection services)
+        public static void AddWebApiServices(this WebApplicationBuilder builder)
         {
-            services.AddCors(options =>
-            {
-                options.AddPolicy(
-                    name: "AllowOrigin", builder =>
-                    {
-                        builder.WithOrigins("http://localhost:4200")
-                            .AllowAnyMethod()
-                            .AllowAnyHeader();
-                    });
-            });
-            services.AddSwaggerExtension();
-            services.AddControllerExtension();
-            services.AddApiVersioningExtension();
+            builder.Services.AddSwaggerExtension();
+            builder.AddCorsExtensions();
+            builder.Services.AddControllerExtension();
+            builder.Services.AddApiVersioningExtension();
+            builder.Services.AddSpaExtensions();
         }
 
         /// <summary>
@@ -43,7 +35,7 @@ namespace DoItFast.WebApi.Extensions
                 {
                     options.SwaggerDoc(version, new OpenApiInfo
                     {
-                        Title = "DoItFast.WebApi",
+                        Title = "MusalaTest.WebApi",
                         Version = version,
                         Description = "Template",
                         Contact = new OpenApiContact
@@ -90,10 +82,10 @@ namespace DoItFast.WebApi.Extensions
         }
 
         /// <summary>
-        /// Register api versioning.
+        /// Register api versioning
         /// </summary>
         /// <param name="services"></param>
-        public static void AddApiVersioningExtension(this IServiceCollection services)
+        private static void AddApiVersioningExtension(this IServiceCollection services)
         {
             services.AddApiVersioning(config =>
             {
@@ -113,16 +105,50 @@ namespace DoItFast.WebApi.Extensions
         }
 
         /// <summary>
-        /// Register mvc builder.
+        /// Register mvc builder
         /// </summary>
         /// <param name="services"></param>
-        public static void AddControllerExtension(this IServiceCollection services)
+        private static void AddControllerExtension(this IServiceCollection services)
         {
             services.AddControllers().AddNewtonsoftJson(options =>
             {
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
                 options.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
             });
+        }
+
+        /// <summary>
+        /// Register spa
+        /// </summary>
+        /// <param name="services"></param>
+        private static void AddSpaExtensions(this IServiceCollection services)
+        {
+            services.AddSpaStaticFiles(configuration =>
+            {
+                configuration.RootPath = "ClientApp/dist";
+            });
+        }
+
+        /// <summary>
+        /// Register cors
+        /// </summary>
+        /// <param name="builder"></param>
+        private static void AddCorsExtensions(this WebApplicationBuilder builder)
+        {
+            if (builder.Environment.IsDevelopment())
+            {
+                builder.Services.AddCors(options =>
+                {
+                    options.AddPolicy(
+                        name: "AllowOrigin", builder =>
+                        {
+                            builder.WithOrigins("http://localhost:4200")
+                                .AllowAnyMethod()
+                                .AllowAnyHeader()
+                                .AllowCredentials();
+                        });
+                });
+            }
         }
 
         ///// <summary>

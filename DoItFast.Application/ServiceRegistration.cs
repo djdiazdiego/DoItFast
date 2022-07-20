@@ -31,9 +31,9 @@ namespace DoItFast.Application
         /// <param name="configuration"></param>
         public static void AddApplicationLayerServices(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddAuthenticationService(configuration);
+            //services.AddAuthenticationService(configuration);
 
-            services.Configure<MailSettings>(configuration.GetSection(nameof(MailSettings)));
+            //services.Configure<MailSettings>(configuration.GetSection(nameof(MailSettings)));
 
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
             services.AddMediatR(Assembly.GetExecutingAssembly(), typeof(DbContextWrite).Assembly);
@@ -115,8 +115,8 @@ namespace DoItFast.Application
         /// <param name="services"></param>
         private static void AddServices(this IServiceCollection services)
         {
-            services.AddScoped<IMailService, MailService>();
-            services.AddScoped<IAccountService, AccountService>();
+            //services.AddScoped<IMailService, MailService>();
+            //services.AddScoped<IAccountService, AccountService>();
         }
 
     }

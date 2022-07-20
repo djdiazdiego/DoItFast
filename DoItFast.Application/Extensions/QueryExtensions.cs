@@ -36,7 +36,7 @@ namespace DoItFast.Application.Features.Queries
         /// </summary>
         /// <param name="query"></param>
         /// <param name="pagging"></param>
-        public static IQueryable<TModel> BuildPagging<TModel>(this IQueryable<TModel> query, IPagging pagging)
+        public static IQueryable<TModel> BuildPagging<TModel>(this IQueryable<TModel> query, IPaging pagging)
             where TModel : class
         {
             var page = pagging.Page < 1 ? 1 : pagging.Page;

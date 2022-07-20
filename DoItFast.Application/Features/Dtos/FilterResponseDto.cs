@@ -7,7 +7,7 @@ namespace DoItFast.Application.Features.Dtos
     {
         protected FilterResponseDto(List<TDto> entities, int total)
         {
-            Entities = entities;
+            Data = entities;
             Total = total;
         }
 
@@ -15,6 +15,6 @@ namespace DoItFast.Application.Features.Dtos
         public int Total { get; }
 
         ///<inheritdoc/>
-        public List<TDto> Entities { get; }
+        public List<TDto> Data { get; }
     }
 }

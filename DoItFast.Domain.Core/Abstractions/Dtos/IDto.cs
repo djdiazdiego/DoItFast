@@ -18,6 +18,6 @@ namespace DoItFast.Domain.Core.Abstractions.Dtos
         /// <summary>
         /// Entities list.
         /// </summary>
-        List<TResponse> Entities { get; }
+        List<TResponse> Data { get; }
     }
 }
